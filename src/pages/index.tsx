@@ -12,7 +12,7 @@ const CreatePostWizard =  () => {
   if(!user) return null;
   return (
     <div className="flex w-full gap-3">
-      <img className="h-14 w-14 rounded-full" src={user.profileImageUrl} alt="profile pic" />
+      <img className="h-14 w-14 rounded-full" src={user.profileImageUrl} alt="profile-pic" />
       <input className="grow bg-transparent outline-none" placeholder="Type some emojis!" />
     </div>
   )
