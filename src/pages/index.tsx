@@ -1,11 +1,17 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import Head from "next/head";
 import Link from "next/link";
 import { api } from "~/utils/api";
-import { UserButton } from "@clerk/nextjs";
+import { UserButton, useUser } from "@clerk/nextjs";
 
 export default function Home() {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
+  const user = useUser();
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const {data} = api.posts.getAll.useQuery();
+  // console.log(data); 
   return (
     <>
       <Head>
@@ -16,6 +22,9 @@ export default function Home() {
 
     <div>
       <UserButton afterSignOutUrl="/"/>
+    </div>
+    <div>
+      { data?.map((post) => (<div key={post.id}>{post.content}</div>) )}
     </div>
     </>
   );
