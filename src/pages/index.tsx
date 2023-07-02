@@ -4,13 +4,26 @@
 import Head from "next/head";
 import Link from "next/link";
 import { api } from "~/utils/api";
-import { UserButton, useUser } from "@clerk/nextjs";
+import { SignInButton, SignOutButton, UserButton, useUser } from "@clerk/nextjs";
+
+const CreatePostWizard =  () => {
+  const {user} = useUser();
+  console.log(user);
+  if(!user) return null;
+  return (
+    <div className="flex w-full gap-3">
+      <img className="h-14 w-14 rounded-full" src={user.profileImageUrl} alt="profile pic" />
+      <input className="grow bg-transparent outline-none" placeholder="Type some emojis!" />
+    </div>
+  )
+};
 
 export default function Home() {
   const user = useUser();
-
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const {data} = api.posts.getAll.useQuery();
+  const { data, isLoading } = api.posts.getAll.useQuery();
+  if(isLoading) return (<div>Loading...</div>)
+  if(!data) return (<div>Something went wrong</div>)
   // console.log(data); 
   return (
     <>
@@ -20,12 +33,17 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-    <div>
-      <UserButton afterSignOutUrl="/"/>
-    </div>
-    <div>
-      { data?.map((post) => (<div key={post.id}>{post.content}</div>) )}
-    </div>
+      <main className="flex justify-center h-screen">
+        <div className=" border-slate-400 h-full w-full md:max-w-2xl border-x">
+          <div className="border-b border-slate-400 p-4">
+            {!user.isSignedIn && <div className="flex justify-center"><SignInButton /></div> }
+            {user.isSignedIn && <CreatePostWizard />}
+          </div>
+          <div className="flex flex-col" >
+            {[...data, ...data]?.map((post) => (<div key={post.id} className="border-b border-slate-400 p-8">{post.content}</div>))}
+          </div>
+        </div>
+      </main>
     </>
   );
 }
