@@ -22,7 +22,7 @@ const Facemask = () => {
   });
   const [isTab, setIsTab] = useState<boolean>(false);
 
-  const onResults = (results: FaceMesh.Results) => {
+  const onResults = (results: Facemesh.Results) => {
     const img = new Image();
     img.src = "https://www.svgrepo.com/show/62101/sword.svg";
     const { multiFaceLandmarks } = results;
