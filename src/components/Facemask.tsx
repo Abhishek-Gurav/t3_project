@@ -34,7 +34,7 @@ const Facemask = () => {
     canvasRef.current?.setAttribute("height", `${videoHeight}`);
 
     const canvasElement = canvasRef.current;
-    const canvasCtx = canvasElement?.getContext("2d");
+    const canvasCtx = canvasElement?.getContext('2D') as unknown as CanvasRenderingContext2D;
 
     if (multiFaceLandmarks) {
       for (const landmarks of multiFaceLandmarks) {
