@@ -8,21 +8,17 @@ import { isTablet } from "react-device-detect";
 import ghostMask from "../Images/Ghostmask.png";
 import styles from "../styles/facemesh.module.css";
 
-interface WindowDimension {
-  winWidth: number;
-  winHeight: number;
-}
 
 const Facemask = () => {
-  const webcamRef = useRef<Webcam>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [windowDimension, setWindowDimension] = useState<WindowDimension>({
+  const webcamRef = useRef(null);
+  const canvasRef = useRef(null);
+  const [windowDimension, setWindowDimension] = useState({
     winWidth: typeof window !== "undefined" ? window.innerWidth : 0,
     winHeight: typeof window !== "undefined" ? window.innerHeight : 0,
   });
-  const [isTab, setIsTab] = useState<boolean>(false);
+  const [isTab, setIsTab] = useState(false);
 
-  const onResults = (results: Facemesh.Results) => {
+  const onResults = (results) => {
     const img = new Image();
     img.src = "https://www.svgrepo.com/show/62101/sword.svg";
     const { multiFaceLandmarks } = results;
@@ -34,7 +30,7 @@ const Facemask = () => {
     canvasRef.current?.setAttribute("height", `${videoHeight}`);
 
     const canvasElement = canvasRef.current;
-    const canvasCtx = canvasElement?.getContext('2D') as unknown as CanvasRenderingContext2D;
+    const canvasCtx = canvasElement?.getContext("2d");
 
     if (multiFaceLandmarks) {
       for (const landmarks of multiFaceLandmarks) {
@@ -76,12 +72,12 @@ const Facemask = () => {
 
   useEffect(() => {
     const faceMesh = new FaceMesh({
-      locateFile: (file: string) => {
+      locateFile: (file) => {
         return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
       },
     });
 
-    faceMesh.setOptions({
+    faceMesh.setOptions ({
       maxNumFaces: 4,
       minDetectionConfidence: 0.5,
       minTrackingConfidence: 0.5,
@@ -89,16 +85,15 @@ const Facemask = () => {
     });
 
     faceMesh.onResults(onResults);
-
     if (webcamRef.current) {
-      const camera = new Camera(webcamRef.current.video!, {
+       const camera =  webcamRef.current? new Camera(webcamRef.current.video, {
         onFrame: async () => {
-          await faceMesh.send({ image: webcamRef.current.video! });
+          await faceMesh.send({ image: webcamRef.current.video });
         },
         width: 640,
         height: 480,
-      });
-      camera.start();
+      }) : null;
+     camera?.start().catch((err) => console.error(err));
     }
   }, []);
 
