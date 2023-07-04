@@ -5,6 +5,8 @@ import Head from "next/head";
 import Link from "next/link";
 import { api } from "~/utils/api";
 import { SignInButton, SignOutButton, UserButton, useUser } from "@clerk/nextjs";
+import Home1 from "./Home";
+import Script from "next/script";
 
 const CreatePostWizard =  () => {
   const {user} = useUser();
@@ -12,8 +14,8 @@ const CreatePostWizard =  () => {
   if(!user) return null;
   return (
     <div className="flex w-full gap-3">
-      <img className="h-14 w-14 rounded-full" src={user.profileImageUrl} alt="profile-pic" />
-      <input className="grow bg-transparent outline-none" placeholder="Type some emojis!" />
+      {/* <img className="h-14 w-14 rounded-full" src={user.profileImageUrl} alt="profile-pic" /> */}
+      <input className="ml-6 grow bg-transparent outline-none" placeholder="Type some emojis!" />
     </div>
   )
 };
@@ -25,6 +27,17 @@ export default function Home() {
   if(isLoading) return (<div>Loading...</div>)
   if(!data) return (<div>Something went wrong</div>)
   // console.log(data); 
+//   <script src="https://cdn.jsdelivr.net/npm/react/umd/react.production.min.js" crossorigin></script>
+
+// <script
+//   src="https://cdn.jsdelivr.net/npm/react-dom/umd/react-dom.production.min.js"
+//   crossorigin></script>
+
+// <script
+//   src="https://cdn.jsdelivr.net/npm/react-bootstrap@next/dist/react-bootstrap.min.js"
+//   crossorigin></script>
+
+// <script>var Alert = ReactBootstrap.Alert;</script>
   return (
     <>
       <Head>
@@ -33,17 +46,11 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="flex justify-center h-screen">
-        <div className=" border-slate-400 h-full w-full md:max-w-2xl border-x">
-          <div className="border-b border-slate-400 p-4">
             {!user.isSignedIn && <div className="flex justify-center"><SignInButton /></div> }
-            {user.isSignedIn && <CreatePostWizard />}
-          </div>
-          <div className="flex flex-col" >
-            {[...data, ...data]?.map((post) => (<div key={post.id} className="border-b border-slate-400 p-8">{post.content}</div>))}
-          </div>
-        </div>
-      </main>
+            {user.isSignedIn && 
+            <div className="flex justify-center"><Home1 /></div>}
+            
     </>
+    
   );
 }
